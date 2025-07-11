@@ -10,6 +10,9 @@ function App() {
     earth_date: [],
   });
 
+  const [seenPhotos, setSeenPhotos] = useState([]);
+
+
   const ACCESS_KEY = import.meta.env.VITE_APP_ACCESS_KEY;
 
   const addToBanList = (attribute, value) => {
@@ -58,7 +61,9 @@ function App() {
         setPhoto(null);
       } else {
         const randomIndex = Math.floor(Math.random() * filtered.length);
-        setPhoto(filtered[randomIndex]);
+        const selectedPhoto = filtered[randomIndex];
+        setPhoto(selectedPhoto);
+        setSeenPhotos(prev => [selectedPhoto, ...prev]);
         setError(null);
       }
     } catch (err) {
@@ -148,6 +153,46 @@ function App() {
           </div>
         ))}
       </div>
+
+      <div style={{ display: 'flex', marginTop: '40px' }}>
+      {/* Sidebar */}
+      <div style={{
+        width: '120px',
+        height: '400px',
+        overflowY: 'auto',
+        borderRight: '1px solid #ccc',
+        paddingRight: '10px',
+        marginRight: '20px'
+      }}>
+        <h4 style={{ textAlign: 'center' }}>🖼️ Gallery</h4>
+        {seenPhotos.map((p, idx) => (
+          <img
+            key={idx}
+            src={p.img_src}
+            alt={`Thumbnail ${idx}`}
+            width="100"
+            style={{ marginBottom: '10px', cursor: 'pointer', borderRadius: '6px' }}
+            onClick={() => setPhoto(p)} // Optional: click to view
+          />
+        ))}
+      </div>
+
+        {/* Main Image Area */}
+        <div>
+          {photo && (
+            <div>
+              <img
+                src={photo.img_src}
+                alt="Mars Rover"
+                width="400"
+                style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}
+              />
+              {/* ...other attributes here */}
+            </div>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 }
